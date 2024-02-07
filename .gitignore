@@ -1,0 +1,8 @@
+/tests
+/old
+
+*.sh
+*.js
+
+.env
+.htaccess
