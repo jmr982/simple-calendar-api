@@ -28,7 +28,7 @@ Query string
 ```
 #### Example 2
 ```
-/?start=YYYY-MM-DD%20hh:mm:ss&end=YYYY-MM-DD%20hh:mm:ss
+/?start=YYYY-MM-DD%20HH:mm:ss&end=YYYY-MM-DD%20HH:mm:ss
 ```
 
 ### POST 
@@ -45,8 +45,8 @@ Request body
 #### Example
 ```
 {
-  start: 'YYYY-MM-DD hh:mm:ss',
-  end: 'YYYY-MM-DD hh:mm:ss',
+  start: 'YYYY-MM-DD HH:mm:ss',
+  end: 'YYYY-MM-DD HH:mm:ss',
   subject: 'This is an example subject',
   description: 'This is an example description'
 }
@@ -95,12 +95,12 @@ method, an array of events or a success message.
 [
   {
     id: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
-    start: 'YYYY-MM-DD hh:mm:ss',
-    end: 'YYYY-MM-DD hh:mm:ss',
+    start: 'YYYY-MM-DD HH:mm:ss',
+    end: 'YYYY-MM-DD HH:mm:ss',
     subject: 'This is an example subject',
     description: 'This is an example description'
-    added: 'YYYY-MM-DD hh:mm:ss',
-    modified: 'YYYY-MM-DD hh:mm:ss'
+    added: 'YYYY-MM-DD HH:mm:ss',
+    modified: 'YYYY-MM-DD HH:mm:ss'
   }
 ]
 ```
