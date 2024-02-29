@@ -13,6 +13,12 @@ working solution that can be put into production. If you find bugs or issues,
 please report them. If you are interested in working on the project, please do 
 so. All help is welcome.
 
+## Test the API
+A test version of the API is live on https://simple-calendar-api.jmr982.serv00.net.
+To test it, use the following credentials: 
+* username = testuser
+* password = eMNeM5t4vyTkHe5MYaxc2sy5&423~$
+
 ## Request - Implemented HTTP request methods 
 ### GET
 List events by either id or start and end datetime.
