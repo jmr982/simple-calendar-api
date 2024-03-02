@@ -1,7 +1,7 @@
 <?php
 /*
-    This function accepts as an argument an MySQL error code. Returns a custom 
-    error message.
+  This function accepts as an argument an MySQL error code. Returns a custom 
+  error message.
 */
 function errorMessage($code) {
     $errorMessages = array(

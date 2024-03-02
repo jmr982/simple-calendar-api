@@ -1,9 +1,8 @@
 <?php
 /*  
-    This function uses 'Basic' authorization credentials from the 
-    Authorization' header to authenticate to the database. Database host and 
-    name are read from environmental variables. Returns a connection object or 
-    throws an exception. 
+  This function uses 'Basic' authorization credentials from the Authorization 
+  header to authenticate to the database. Database host and name are read from 
+  environmental variables. Returns a connection object or throws an exception. 
 */
 function dbConnect() {
     try {
@@ -22,9 +21,9 @@ function dbConnect() {
 }
 
 /*  
-    The function accepts as parameters the SQL statement and parameters used 
-    with the prepare and execute methods. Returns a dictionary containing 
-    either a success or error message.
+  The function accepts as parameters the SQL statement and parameters used 
+  with the prepare and execute methods. Returns a dictionary containing either 
+  a success or error message.
 */
 function sqlStatement($statement, $params = array()) {
     try {
@@ -45,8 +44,8 @@ function sqlStatement($statement, $params = array()) {
 }
   
 /*  
-    Returns a single event using id or all events for between the given start 
-    and end datetimes. Accepts as arguments the start and end datetime.
+  Returns a single event using id or all events for between the given start 
+  and end datetimes. Accepts as arguments the start and end datetime.
 */
 function getEvents($params) {
     $select = 
@@ -64,9 +63,8 @@ function getEvents($params) {
 }
 
 /*
-    Adds (inserts) an event to the calendar. Accepts as an argument a 
-    dictionary containing the start and end datetimes, subject, and the 
-    description string.
+  Adds (inserts) an event to the calendar. Accepts as an argument a dictionary 
+  containing the start and end datetimes, subject, and the description string.
 */
 function addEvent($params) {
     $select = "SELECT UUID() AS id";
@@ -85,13 +83,13 @@ function addEvent($params) {
 }
 
 /*
-    Updates an event with the given id. Accepts as arguments a dictionary 
-    containing the parameters to be updated and an array containing the 
-    allowed fields. Enables dynamically changing the statement to match the 
-    incoming data.
+  Updates an event with the given id. Accepts as arguments a dictionary 
+  containing the parameters to be updated and an array containing the allowed 
+  fields. Enables dynamically changing the statement to match the incoming 
+  data.
 */
 function updateEvent($params, $fields) {
-    //Creates the statement 
+    // Creates the statement 
     $update = "UPDATE Calendar SET ";
     foreach ($fields as $key) {
         if (array_key_exists($key, $params)) {
