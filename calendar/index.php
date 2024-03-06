@@ -34,7 +34,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $response = array('error'=>'403 forbidden');
 }
 
-if (isset($response['error']) && is_numeric($response['error'])) {
+/* 
+  This hides all errors except for '403 forbidden' and those specified in 
+  error_message.php. Comment out for testing.
+*/
+if (isset($response['error']) && $response['error'] != '403 forbidden') {
     $response['error'] = errorMessage($response['error']);
 }
 
