@@ -66,12 +66,19 @@ function getEvents($params) {
   Adds (inserts) an event to the calendar. Accepts as an argument a dictionary 
   containing the start and end datetimes, subject, and the description string.
 */
-function addEvent($params) {
+function addEvent($params, $fields) {
     $select = "SELECT UUID() AS id";
     $id = (array)sqlStatement($select)[0];
     $params['id'] = $id['id'];
 
-    $insert = "INSERT INTO Calendar (id, start, end, subject, description) 
+    // Set missing $params to null.
+    foreach ($fields as $key) {
+        if (!array_key_exists($key, $params)) {
+            $params[$key] = null;
+        }
+    }
+
+    $insert = "INSERT INTO Calendar (id, start, end, subject, description)
     VALUES(UUID_TO_BIN(:id), :start, :end, :subject, :description)";
     $result = sqlStatement($insert, $params);
 
@@ -89,13 +96,16 @@ function addEvent($params) {
   data.
 */
 function updateEvent($params, $fields) {
-    // Creates the statement 
+    //Creates the statement.
     $update = "UPDATE Calendar SET ";
+    
+    // Dynamically add field(s) to update.
     foreach ($fields as $key) {
         if (array_key_exists($key, $params)) {
             $update .= "$key=:$key ";
         }
     }
+    
     $update .= "WHERE id=UUID_TO_BIN(:id)";
     $result = sqlStatement($update, $params);
 

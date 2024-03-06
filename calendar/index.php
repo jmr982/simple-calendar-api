@@ -9,6 +9,9 @@ if (isset($_SERVER['QUERY_STRING'])) {
 
 $body = file_get_contents('php://input');
 
+// Array of allowed fields. 'start' and 'end' are required for POST.
+$fields = array('start', 'end', 'subject', 'description');
+
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         parse_str($query, $params);
@@ -16,11 +19,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
     case 'POST':
         $params = json_decode($body, true);
-        $response = addEvent($params);
+        $response = addEvent($params, $fields);
         break;
     case 'PUT':
-        // Array of allowed fields to be updated. Change if needed.
-        $fields = array('start', 'end', 'subject', 'description');
         $params = json_decode($body, true);
         $response = updateEvent($params, $fields);
         break;
