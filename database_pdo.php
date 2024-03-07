@@ -35,11 +35,10 @@ function sqlStatement($statement, $params = array()) {
             );
         $prepared->execute($params);
         $result = $prepared->fetchAll(PDO::FETCH_CLASS);
-    } catch (Exception $e) {
-        $result['error'] = $e->getCode();
-    } finally {
         $conn = null;
         return $result;
+    } catch (Exception $e) {
+        throw new Exception($e->getCode());        
     }
 }
   
@@ -48,18 +47,22 @@ function sqlStatement($statement, $params = array()) {
   and end datetimes. Accepts as arguments the start and end datetime.
 */
 function getEvents($params) {
-    $select = 
-        "SELECT BIN_TO_UUID(id) AS id, start, end, subject, description, added, modified 
-        FROM Calendar ";
+    try {
+        $select = 
+            "SELECT BIN_TO_UUID(id) AS id, start, end, subject, description, added, modified 
+            FROM Calendar ";
 
-    if (array_key_exists('id', $params)) {
-        $select .= "WHERE id=UUID_TO_BIN(:id)";
-    } else {
-        $select .= "WHERE start BETWEEN :start AND :end";      
+        if (array_key_exists('id', $params)) {
+            $select .= "WHERE id=UUID_TO_BIN(:id)";
+        } else {
+            $select .= "WHERE start BETWEEN :start AND :end";      
+        }
+
+        $result = sqlStatement($select, $params);
+        return $result;
+    } catch (Exception $e) {
+        throw new Exception($e->getCode());
     }
-  
-    $result = sqlStatement($select, $params);
-    return $result;
 }
 
 /*
@@ -67,26 +70,30 @@ function getEvents($params) {
   containing the start and end datetimes, subject, and the description string.
 */
 function addEvent($params, $fields) {
-    $select = "SELECT UUID() AS id";
-    $id = (array)sqlStatement($select)[0];
-    $params['id'] = $id['id'];
+    try {
+        $select = "SELECT UUID() AS id";
+        $id = (array)sqlStatement($select)[0];
+        $params['id'] = $id['id'];
 
-    // Set missing $params to null.
-    foreach ($fields as $key) {
-        if (!array_key_exists($key, $params)) {
-            $params[$key] = null;
+        // Set missing $params to null.
+        foreach ($fields as $key) {
+            if (!array_key_exists($key, $params)) {
+                $params[$key] = null;
+            }
         }
+
+        $insert = "INSERT INTO Calendar (id, start, end, subject, description)
+        VALUES(UUID_TO_BIN(:id), :start, :end, :subject, :description)";
+        $result = sqlStatement($insert, $params);
+
+        if (!isset($result['error'])) {
+            $result = getEvents($id);
+        }
+
+        return $result;
+    } catch (Exception $e) {
+        throw new Exception($e->getCode());
     }
-
-    $insert = "INSERT INTO Calendar (id, start, end, subject, description)
-    VALUES(UUID_TO_BIN(:id), :start, :end, :subject, :description)";
-    $result = sqlStatement($insert, $params);
-
-    if (!isset($result['error'])) {
-        $result = getEvents($id);
-    }
-
-    return $result;
 }
 
 /*
@@ -96,34 +103,42 @@ function addEvent($params, $fields) {
   data.
 */
 function updateEvent($params, $fields) {
-    //Creates the statement.
-    $update = "UPDATE Calendar SET ";
+    try {
+        // Creates the statement.
+        $update = "UPDATE Calendar SET ";
     
-    // Dynamically add field(s) to update.
-    foreach ($fields as $key) {
-        if (array_key_exists($key, $params)) {
-            $update .= "$key=:$key ";
+        // Dynamically add field(s) to update.
+        foreach ($fields as $key) {
+            if (array_key_exists($key, $params)) {
+                $update .= "$key=:$key ";
+            }
         }
-    }
     
-    $update .= "WHERE id=UUID_TO_BIN(:id)";
-    $result = sqlStatement($update, $params);
+        $update .= "WHERE id=UUID_TO_BIN(:id)";
+        $result = sqlStatement($update, $params);
 
-    if (!isset($result['error'])) {
-        $result = getEvents(array('id'=>$params['id']));
+        if (!isset($result['error'])) {
+            $result = getEvents(array('id'=>$params['id']));
+        }
+
+        return $result; 
+    } catch (Exception $e) {
+        throw new Exception($e->getCode());
     }
-
-    return $result;
 }
 
 // Accepts as an argument the id of the event to be deleted.
 function deleteEvent($params) {
-    $delete = "DELETE FROM Calendar WHERE id=UUID_TO_BIN(:id)";
-    $result = sqlStatement($delete, $params);
+    try {
+        $delete = "DELETE FROM Calendar WHERE id=UUID_TO_BIN(:id)";
+        $result = sqlStatement($delete, $params);
 
-    if (!isset($result['error'])) {
-        $result = array('success'=>'event deleted');
+        if (!isset($result['error'])) {
+            $result = array('success'=>'event deleted');
+        }
+
+        return $result;
+    } catch (Exception $e) {
+        throw new Exception($e->getCode());
     }
-
-    return $result;
 }
