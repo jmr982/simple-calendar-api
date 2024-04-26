@@ -24,7 +24,7 @@ try {
             validateRequest($params);
             $response = addEvent($params, $fields);
             break;
-        case 'PUT':
+        case 'PATCH':
             $params = json_decode($body, true);
             validateRequest($params);
             $response = updateEvent($params, $fields);

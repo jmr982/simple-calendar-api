@@ -58,7 +58,7 @@ Request body
 }
 ```
 
-### PUT 
+### PATCH 
 Update an event using id.
 
 Request body
